@@ -1,12 +1,18 @@
-import React from 'react'
+// src/components/common/Home.jsx
+import React from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import { Container, Button } from 'react-bootstrap';
-
-import p3 from '../../images/p3.webp'
+import p3 from '../../images/p3.webp';
 
 const Home = () => {
+  const navigate = useNavigate(); // Get navigate function
+
+  const handleBookButtonClick = () => {
+    navigate('/login'); // Navigate to login page
+  };
+
   return (
     <>
       <Navbar expand="lg" className="bg-body-tertiary">
@@ -16,18 +22,13 @@ const Home = () => {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
-            <Nav
-              className="me-auto my-2 my-lg-0"
-              style={{ maxHeight: '100px' }}
-              navbarScroll
-            >
-            </Nav>
+            <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll></Nav>
             <Nav>
-              <Link to={'/'}>Home</Link>
-              <Link to={'/login'}>Login</Link>
-              <Link to={'/register'}>Register</Link>
+              {/* Use Nav.Link with as={Link} for React Bootstrap integration */}
+              <Nav.Link as={Link} to={'/'}>Home</Nav.Link>
+              <Nav.Link as={Link} to={'/login'}>Login</Nav.Link>
+              <Nav.Link as={Link} to={'/register'}>Register</Nav.Link>
             </Nav>
-
           </Navbar.Collapse>
         </Container>
       </Navbar>
@@ -41,15 +42,17 @@ const Home = () => {
             <span className='f-letter'>Effortlessly schedule your doctor</span><br />
             <span className='s-letter'>appointments with just a few clicks,</span> <br />
             <span className='t-letter'>putting your health in your hands.</span><br />
-            <Button color='info' className='mt-3 register'><Link to={'/Login'}>Book your Doctor</Link></Button>
+            {/* Use button with onClick instead of wrapping Link */}
+            <Button color='info' className='mt-3 register' onClick={handleBookButtonClick}>
+              Book your Doctor
+            </Button>
           </p>
         </div>
       </div>
 
-
-      <Container>
+      <Container className='my-5'> {/* Added margin */}
         <h1 className='text-center mb-4'>About Us</h1>
-        <div className="right-side">
+        <div className="about-us-text"> {/* Changed class name to avoid conflict */}
           <p>
             Booking a doctor appointment has never been easier. With our convenient online platform, you can quickly and effortlessly schedule your appointments from the comfort of your own home. No more waiting on hold or playing phone tag with busy receptionists.
 
@@ -73,11 +76,8 @@ const Home = () => {
           </p>
         </div>
       </Container>
-
-
-
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

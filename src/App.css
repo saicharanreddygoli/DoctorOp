@@ -1,5 +1,9 @@
+/* src/App.css */
+
+/* Import Bootstrap CSS */
 @import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
+/* Basic reset */
 * {
   padding: 0;
   margin: 0;
@@ -10,11 +14,29 @@ body {
   background-color: rgb(190, 203, 203);
 }
 
-a {
+/* Removed global 'a' styles to let component libraries handle them */
+/* a {
   color: black;
   text-decoration: none;
   margin-right: 20px;
+} */
+
+/* Add specific link style if needed, e.g., for the sidebar links */
+.sidebar a {
+   color: white; /* Or your desired sidebar link color */
+   text-decoration: none;
+   /* margin-right: 20px; Removed unless needed */
 }
+
+/* Ensure Nav.Link in header works */
+.bg-body-tertiary .nav-link {
+   color: black; /* Or match your header link color */
+   margin-right: 20px;
+}
+.bg-body-tertiary .nav-link:hover {
+    color: #007bff; /* Hover color */
+}
+
 
 .App {
   display: flex;
@@ -22,38 +44,49 @@ a {
   min-height: 100vh;
 }
 
-.content {
+/* The 'content' class is used in the layout, be careful modifying this globally */
+/* The content in App.jsx wraps the routes, which is different from the layout content */
+/* Let's rename the route wrapper content to avoid conflict */
+.route-content {
   flex: 1;
+  display: flex;
+  flex-direction: column; /* Added flex-direction */
+  min-height: calc(100vh - 50px); /* Adjusted height considering footer */
 }
 
 .home-container {
   max-width: 100vw;
-  height: 100vh;
+  min-height: calc(100vh - 50px); /* Adjusted height */
   display: flex;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  align-items: center; /* Vertically center items */
 }
 
 .left-side,
 .right-side {
   flex: 1;
-  height: 100%;
+  min-width: 300px; /* Minimum width for responsiveness */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
+  padding: 20px; /* Added padding */
 }
 
 .left-side img {
   max-width: 100%;
-  height: 70%;
-
+  height: auto; /* Changed height to auto */
+  max-height: 70vh; /* Max height */
 }
 
 .right-side {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  text-align: center; /* Center text */
 }
+
+.right-side p {
+   margin: 0; /* Reset paragraph margin */
+}
+
 
 span {
   font-family: Arial, Helvetica, sans-serif;
@@ -71,103 +104,154 @@ span {
   font-size: 1.5em;
 }
 
-/************************************************************/
+/* Added style for About Us section to differentiate */
+.about-us-text {
+   margin-top: 40px;
+   padding: 20px;
+   background-color: #f8f9fa; /* Light background */
+   border-radius: 5px;
+   box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.about-us-text p {
+   text-align: justify; /* Justify text */
+   color: #212529; /* Dark text color */
+}
+
+/******************** Layout Styles ********************/
 .main {
   padding: 10px;
-  height: 92.1vh;
+  min-height: calc(100vh - 50px); /* Adjusted height */
   /* background-color: aqua; */
 }
 
 .layout {
   display: flex;
+  min-height: calc(100vh - 70px); /* Adjusted height relative to .main */
 }
 
 .sidebar {
   min-height: 100%;
-  height: 88vh;
-  width: 17vw;
+  height: auto; /* Changed to auto to fit content */
+  width: 200px; /* Fixed width for sidebar */
   border-radius: 5px;
   background-color: rgb(153, 145, 145);
   box-shadow: 0 0 2px grey;
   margin-right: 20px;
   color: white;
+  padding-top: 20px; /* Added padding */
 }
 
 .content {
-  width: 100%;
-  height: 100%;
+  flex-grow: 1; /* Allow content to take remaining space */
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
-  height: 10vh;
-  margin-bottom: 20px;
+  height: 60px; /* Reduced header height */
+  margin-bottom: 10px; /* Reduced margin */
   box-shadow: 0 0 2px grey;
   background-color: whitesmoke;
   border-radius: 5px;
+  padding: 0 15px; /* Added padding */
+  display: flex; /* Use flex for header content */
+  align-items: center; /* Vertically align items */
+  justify-content: space-between; /* Space out items */
 }
 
 .body {
-  height: 75vh;
-  margin-bottom: 20px;
+  flex-grow: 1; /* Allow body to take remaining space */
+  margin-bottom: 10px; /* Reduced margin */
   box-shadow: 0 0 2px grey;
   background-color: whitesmoke;
   border-radius: 5px;
+  overflow-y: auto; /* Add scroll for long content */
 }
 
 .logo h2 {
   text-align: center;
-  margin: 20px 0px;
+  margin: 0 0 20px 0; /* Adjusted margin */
+  font-size: 1.5rem; /* Adjusted font size */
 }
 
 .menu {
-  margin-top: 100px;
+  /* margin-top: 100px; Removed fixed margin */
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; Removed center alignment for text */
+  padding: 0 15px; /* Added padding */
 }
 
 .menu-items {
-  margin-top: 20px;
+  margin-bottom: 10px; /* Adjusted margin */
+  padding: 10px; /* Added padding */
+  border-radius: 4px;
+  transition: background-color 0.2s ease; /* Smooth transition */
 }
 
-.menu-items p {
-  text-align: center;
-  color: white;
-  text-decoration: none;
-  font-size: 1.3rem;
-  cursor: pointer;
+.menu-items:hover {
+   background-color: rgba(255, 255, 255, 0.1); /* Hover effect */
 }
 
-.menu-items .icons {
+.menu-items.active {
+   background-color: rgba(0, 0, 0, 0.3); /* Active state background */
+}
+
+
+.menu-items span {
+   color: white; /* Text color */
+   text-decoration: none;
+   font-size: 1.1rem; /* Adjusted font size */
+   cursor: pointer;
+   margin-left: 10px; /* Space between icon and text */
+}
+
+.menu-items .icon {
   font-size: 1.2rem;
-  margin: 0 15px;
+  /* margin: 0 15px; Adjusted */
+  vertical-align: middle; /* Align icon vertically */
 }
 
 .header-content {
   display: flex;
   align-items: center;
-  height: 70px;
-  justify-content: flex-start;
-  margin: auto 15px;
+  /* height: 70px; Removed fixed height */
+  /* justify-content: flex-start; Removed */
+  /* margin: auto 15px; Removed */
 }
 
+/* Style for the notification icon and badge */
 .notify {
   position: relative;
-  display: inline-block;
+  display: inline-flex; /* Use inline-flex to align items */
+  align-items: center;
+  margin-right: 20px; /* Space after notification icon */
   cursor: pointer;
 }
 
-sup{
-  margin-right: 15px;
-}
-
 .notify .icon {
-  margin-right: 10px;
+  /* margin-right: 10px; Removed, spacing handled by Badge */
   font-size: 1.5rem;
+  color: #007bff; /* Example color */
+}
+
+/* Style for notification cards in the Notification component */
+.card {
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #333; /* Text color */
+}
+
+.card-text {
+  padding: 10px;
 }
 
 
-/**********************************************/
+/******************** General Component Styles ********************/
+/* These styles seem generic and might apply to other components */
 .box {
   display: flex;
   flex-direction: column;
@@ -179,6 +263,7 @@ sup{
   background-color: whitesmoke;
   max-width: 700px;
   width: 100%;
+  margin: 20px auto; /* Center the box */
 }
 
 .component {
@@ -191,7 +276,7 @@ sup{
   border: 2px dashed grey;
   border-radius: 10px;
   width: 100%;
-  height: 200px;
+  min-height: 200px; /* Changed height to min-height */
   text-align: center;
   cursor: pointer;
 }
@@ -213,7 +298,13 @@ sup{
   color: grey;
   padding: 10px 20px;
   margin-right: 10px;
+  /* Removed background-color and border-color for default button look */
 }
+
+.btn-progress button:last-child {
+   margin-right: 0; /* Remove margin on last button */
+}
+
 
 .btn-progress button:hover {
   box-shadow: 0 0 10px grey;
@@ -225,6 +316,7 @@ progress {
   appearance: none;
   background-color: #f0f0f0;
   border-radius: 10px;
+  border: none; /* Added border: none */
 }
 
 progress::-webkit-progress-bar {
@@ -235,4 +327,68 @@ progress::-webkit-progress-bar {
 progress::-webkit-progress-value {
   background-color: grey;
   border-radius: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    margin-right: 0;
+    margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .sidebar .menu {
+      flex-direction: row; /* Row layout for menu items */
+      justify-content: space-around; /* Space them out */
+      padding: 0;
+  }
+
+  .sidebar .menu-items {
+     margin-bottom: 0;
+     padding: 5px;
+  }
+
+  .sidebar .menu-items span {
+      display: none; /* Hide text on small screens */
+  }
+   .sidebar .menu-items .icon {
+      margin: 0; /* Remove margin */
+   }
+
+
+  .header {
+    margin-bottom: 10px;
+  }
+
+  .home-container {
+    flex-direction: column;
+  }
+
+  .left-side,
+  .right-side {
+    width: 100%;
+    padding: 10px;
+  }
+  .left-side img {
+     max-height: 50vh;
+  }
+
+  .f-letter { font-size: 2em; }
+  .s-letter { font-size: 1.5em; }
+  .t-letter { font-size: 1.2em; }
+
+  .notify {
+      margin-right: 10px;
+  }
+
+  .bg-body-tertiary .nav-link {
+     margin-right: 10px;
+  }
 }
