@@ -1,186 +1,149 @@
-// src/components/user/UserAppointments.jsx
 import React, { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Alert from 'react-bootstrap/Alert';
 import { Container, Button } from 'react-bootstrap';
-import api from '/utils/axiosConfig'; // Use centralized api
+import axios from 'axios';
 import { message } from 'antd';
 
 const UserAppointments = () => {
-  const [userid, setUserId] = useState(null); // Initialize with null
+  const [userid, setUserId] = useState();
   const [type, setType] = useState(false);
   const [userAppointments, setUserAppointments] = useState([]);
   const [doctorAppointments, setDoctorAppointments] = useState([]);
 
-  // Effect to load user data from localStorage ONCE on mount
-  useEffect(() => {
+
+  const getUser = () => {
     const user = JSON.parse(localStorage.getItem('userData'));
     if (user) {
-      setUserId(user._id);
-      setType(user.isdoctor === true); // Ensure type is boolean
+      const { _id, isdoctor } = user;
+      setUserId(_id);
+      setType(isdoctor);
     } else {
-      // Handle case where user data is not in localStorage (should be caught by auth route)
-      console.warn('User data not found in localStorage.');
-      // Redirect or show error if necessary
+      alert('No user to show');
     }
-  }, []); // Empty dependency array
-
-  // Effect to fetch appointments when userid or type changes
-  useEffect(() => {
-    if (userid) { // Only fetch if userid is available
-      if (type === true) {
-        getDoctorAppointment();
-      } else {
-        getUserAppointment();
-      }
-    }
-  }, [userid, type]); // Depend on userid and type
-
+  };
 
   const getUserAppointment = async () => {
-    // console.log('Fetching user appointments for user ID:', userid); // Debug log
+    console.log(userid)
     try {
-      // Use centralized api instance
-      const res = await api.get('/user/getuserappointments', {
+      const res = await axios.get('http://localhost:5000/api/user/getuserappointments', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
         params: {
-          userId: userid, // Use userid state
+          userId: userid,
         },
       });
       if (res.data.success) {
-        // message.success(res.data.message); // Avoid excessive success messages on load
+
+        message.success(res.data.message);
         setUserAppointments(res.data.data);
-      } else {
-        message.error(res.data.message || 'Failed to fetch user appointments.');
       }
     } catch (error) {
-      console.error('Error fetching user appointments:', error);
-      message.error('Something went wrong while fetching user appointments.');
+      console.log(error);
+      message.error('Something went wrong');
     }
   };
 
   const getDoctorAppointment = async () => {
-    // console.log('Fetching doctor appointments for user ID:', userid); // Debug log
+    console.log(userid)
     try {
-      // Use centralized api instance
-      const res = await api.get('/doctor/getdoctorappointments', {
+      const res = await axios.get('http://localhost:5000/api/doctor/getdoctorappointments', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
         params: {
-          userId: userid, // Use userid state (which is the doctor's user ID)
+          userId: userid,
         },
       });
       if (res.data.success) {
-         // message.success(res.data.message); // Avoid excessive success messages on load
+        message.success(res.data.message);
         setDoctorAppointments(res.data.data);
-      } else {
-        message.error(res.data.message || 'Failed to fetch doctor appointments.');
       }
     } catch (error) {
-      console.error('Error fetching doctor appointments:', error);
-      message.error('Something went wrong while fetching doctor appointments.');
+      console.log(error);
+      message.error('Something went wrong');
     }
   };
 
-  const handleStatus = async (userIdOfUser, appointmentId, status) => { // Corrected parameter name for clarity
+  const handleStatus = async (userid, appointmentId, status) => {
     try {
-      // Use centralized api instance
-      const res = await api.post('/doctor/handlestatus', {
-        userid: userIdOfUser, // Send the ID of the user who booked
+      const res = await axios.post('http://localhost:5000/api/doctor/handlestatus', {
+        userid,
         appointmentId,
         status,
-      });
+      },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
       if (res.data.success) {
-        message.success(res.data.message);
-        // Refresh both lists just in case status change affects both views
+        message.success(res.data.message)
         getDoctorAppointment();
         getUserAppointment();
-      } else {
-        message.error(res.data.message || 'Failed to update appointment status.');
       }
     } catch (error) {
-      console.error('Error updating appointment status:', error);
-      message.error('Something went wrong while updating status.');
+      console.log(error);
+      message.error('Something went wrong');
     }
   };
+
+  useEffect(() => {
+    getUser();
+  }, [userid]);
+
+  useEffect(() => {
+    if (type === true) {
+      getDoctorAppointment();
+    } else {
+      getUserAppointment();
+    }
+  }, [type])
 
   const handleDownload = async (url, appointId) => {
-     if (!url) {
-        message.info("No document available for this appointment.");
-        return;
-     }
-     // Extract filename more safely
-     const urlParts = url.split('/');
-     let filename = urlParts.pop() || 'document'; // Get last part or default to 'document'
-     // Remove query parameters if any
-     filename = filename.split('?')[0];
-
     try {
-      // Use centralized api instance - note responseType: 'blob' is important for binary data
-      const res = await api.get('/doctor/getdocumentdownload', {
-        params: { appointId }, // Assuming backend uses appointId param
+      const res = await axios.get('http://localhost:5000/api/doctor/getdocumentdownload', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem("token")}`,
+        },
+        params: { appointId },
         responseType: 'blob'
       });
+      console.log(res.data)
+      if (res.data) {
+        const fileUrl = window.URL.createObjectURL(new Blob([res.data], { "type": "application/pdf" }));
+        const downloadLink = document.createElement("a");
+        document.body.appendChild(downloadLink);
+        downloadLink.setAttribute("href", fileUrl);
 
-      // Check if the response indicates an error from the backend (e.g., JSON error body)
-      // This is tricky with responseType: 'blob'. You might need a backend change
-      // to return non-blob errors with a specific status code (e.g., 400, 500)
-      // For now, we'll just check the blob size - a very small blob might indicate an error message
-      if (res.data.size < 100 && res.data.type === 'application/json') {
-          // Attempt to read as text if it looks like a JSON error
-          const text = await res.data.text();
-          try {
-              const errorJson = JSON.parse(text);
-              message.error(errorJson.error || 'Failed to download document.');
-              return;
-          } catch (parseError) {
-              console.error('Failed to parse error JSON:', parseError);
-              message.error('Received unexpected response when trying to download.');
-              return;
-          }
+        // Extract the file name from the url parameter
+        const fileName = url.split("/").pop(); // Assuming the URL is in the format "uploads/document.pdf"
+
+        console.log(fileUrl, downloadLink, fileName)
+        // Set the file name for the download
+        downloadLink.setAttribute("download", fileName);
+        downloadLink.style.display = "none";
+        downloadLink.click();
+      } else {
+        message.error(res.data.error);
       }
-
-
-      // If it's a valid blob
-      const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
-      const downloadLink = document.createElement("a");
-      document.body.appendChild(downloadLink);
-      downloadLink.href = fileUrl;
-      downloadLink.download = filename; // Use the extracted filename
-      downloadLink.style.display = "none";
-      downloadLink.click();
-
-      // Clean up the temporary URL and element
-      window.URL.revokeObjectURL(fileUrl);
-      document.body.removeChild(downloadLink);
-
-      message.success('Document downloaded successfully.');
-
     } catch (error) {
-      console.error('Error during document download:', error);
-      message.error('Something went wrong while downloading the document.');
+      console.log(error);
+      message.error('Something went wrong');
     }
   };
-
-  // Basic date formatting helper
-  const formatAppointmentDate = (dateString) => {
-     if (!dateString) return 'N/A';
-     try {
-         return new Date(dateString).toLocaleString();
-     } catch (e) {
-         console.error("Failed to format date:", dateString, e);
-         return dateString; // Return original if formatting fails
-     }
-  }
-
-
   return (
     <div>
       <h2 className='p-3 text-center'>All Appointments</h2>
       <Container>
-        {type === true ? ( // Doctor's view
-          <Table striped bordered hover responsive>
+
+        {type === true ? (
+          <Table striped bordered hover>
             <thead>
               <tr>
-                <th>User Name</th>
-                <th>Date & Time</th> {/* Changed header */}
+                <th>Name</th>
+                <th>Date of Appointment</th>
                 <th>Phone</th>
                 <th>Document</th>
                 <th>Status</th>
@@ -190,33 +153,14 @@ const UserAppointments = () => {
             <tbody>
               {doctorAppointments.length > 0 ? (
                 doctorAppointments.map((appointment) => {
-                  // Assuming doctorAppointments has userInfo nested
                   return (
                     <tr key={appointment._id}>
-                      <td>{appointment.userInfo?.fullName || 'N/A'}</td> {/* Optional chaining */}
-                      <td>{formatAppointmentDate(appointment.date)}</td> {/* Format date */}
-                      <td>{appointment.userInfo?.phone || 'N/A'}</td> {/* Optional chaining */}
-                       {/* Check if document exists before rendering button */}
-                      <td>
-                         {appointment.document?.path ? (
-                           <Button variant='link' onClick={() => handleDownload(appointment.document.path, appointment._id)}>
-                              {appointment.document?.filename || 'Download Document'}
-                           </Button>
-                         ) : (
-                            'No Document'
-                         )}
-                      </td>
+                      <td>{appointment.userInfo.fullName}</td>
+                      <td>{appointment.date}</td>
+                      <td>{appointment.userInfo.phone}</td>
+                      <td><Button variant='link' onClick={() => handleDownload(appointment.document.path, appointment._id)}>{appointment.document.filename}</Button></td>
                       <td>{appointment.status}</td>
-                      <td>
-                        {appointment.status === 'pending' ? (
-                          <Button onClick={() => handleStatus(appointment.userInfo?._id, appointment._id, 'approved')}>
-                            Approve
-                          </Button>
-                        ) : (
-                           // Optionally add other actions or display status
-                           appointment.status === 'approved' ? 'Approved' : 'Rejected'
-                        )}
-                      </td>
+                      <td>{appointment.status === 'approved' ? <></> : <Button onClick={() => handleStatus(appointment.userInfo._id, appointment._id, 'approved')}>Approve</Button>}</td>
                     </tr>
                   );
                 })
@@ -231,31 +175,29 @@ const UserAppointments = () => {
               )}
             </tbody>
           </Table>
-        ) : ( // User's view
-          <Table striped bordered hover responsive>
+        ) : (
+          <Table striped bordered hover>
             <thead>
               <tr>
                 <th>Doctor Name</th>
-                <th>Date & Time</th> {/* Changed header */}
+                <th>Date of Appointment</th>
                 <th>Status</th>
-                 {/* Add document column if users can see/download their uploaded docs later */}
               </tr>
             </thead>
             <tbody>
               {userAppointments.length > 0 ? (
                 userAppointments.map((appointment) => {
-                   // Assuming userAppointments has docName and date directly
                   return (
                     <tr key={appointment._id}>
-                      <td>{appointment.docName || appointment.doctorInfo?.fullName || 'N/A'}</td> {/* Fallback for doctor name */}
-                      <td>{formatAppointmentDate(appointment.date)}</td> {/* Format date */}
+                      <td>{appointment.docName}</td>
+                      <td>{appointment.date}</td>
                       <td>{appointment.status}</td>
                     </tr>
                   );
                 })
               ) : (
                 <tr>
-                  <td colSpan={3}> {/* Adjusted colspan */}
+                  <td colSpan={3}>
                     <Alert variant="info">
                       <Alert.Heading>No Appointments to show</Alert.Heading>
                     </Alert>
