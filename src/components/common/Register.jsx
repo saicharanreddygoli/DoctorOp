@@ -7,7 +7,7 @@ import { message } from 'antd';
 import p2 from '../../images/p2.png';
 import { Button, Form, Row, Col, Card } from 'react-bootstrap'; // Import Card, Row, Col
 import { Link, useNavigate } from 'react-router-dom';
-import api from '../../utils/axiosConfig'; // Use centralized api
+import api from '/utils/axiosConfig'; // Use centralized api
 
 
 const Register = () => {

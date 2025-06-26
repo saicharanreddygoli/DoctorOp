@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Badge, Row, Col } from 'antd'; // Added Col for potential layout
 import Notification from '../common/Notification';
-import api from '../../utils/axiosConfig'; // Use centralized api
+import api from '/utils/axiosConfig'; // Use centralized api
 import { Link } from 'react-router-dom'; // Keep Link for potential future use
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import MedicationIcon from '@mui/icons-material/Medication';

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Alert from 'react-bootstrap/Alert';
 import { Container, Button } from 'react-bootstrap';
-import api from '../../utils/axiosConfig'; // Use centralized api
+import api from '/utils/axiosConfig'; // Use centralized api
 import { message } from 'antd';
 
 const UserAppointments = () => {

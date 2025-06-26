@@ -2,7 +2,7 @@
 import { Col, Form as AntForm, Input, Row, TimePicker, message } from 'antd'; // Use AntForm alias
 import { Container } from 'react-bootstrap'; // Keep React Bootstrap Container
 import React, { useState } from 'react';
-import api from '../../utils/axiosConfig'; // Use centralized api
+import api from '/utils/axiosConfig'; // Use centralized api
 
 function ApplyDoctor({ userId }) { // Ensure userId prop is passed
   const [doctor, setDoctor] = useState({

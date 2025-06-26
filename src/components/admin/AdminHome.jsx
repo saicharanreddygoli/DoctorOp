@@ -1,7 +1,7 @@
 // src/components/admin/AdminHome.jsx
 import React, { useEffect, useState } from 'react';
 // CORRECTED: Changed path from '/utils/axiosConfig' to '../../utils/axiosConfig'
-import api from '../../utils/axiosConfig';
+import api from '/utils/axiosConfig';
 import { Link } from 'react-router-dom'; // Keep Link for potential future navigation
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import MedicationIcon from '@mui/icons-material/Medication';
@@ -11,7 +11,7 @@ import { Badge } from 'antd';
 import Notification from '../common/Notification';
 import AdminUsers from './AdminUsers';
 import AdminDoctors from './AdminDoctors';
-import AdminAppointments from './AdminAppoitments'; // Corrected import name
+import AdminAppointments from './AdminAppointments'; // Corrected import name
 
 const AdminHome = () => {
   const [userdata, setUserData] = useState({});

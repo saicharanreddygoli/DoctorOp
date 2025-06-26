@@ -6,7 +6,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { message } from 'antd';
 import { Button, Form, Row, Col, Card } from 'react-bootstrap'; // Import Card, Row, Col
 import photo1 from '../../images/photo1.png';
-import api from '../../utils/axiosConfig'; // Use centralized api
+import api from '/utils/axiosConfig'; // Use centralized api
 import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {

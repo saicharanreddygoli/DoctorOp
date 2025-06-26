@@ -1,6 +1,6 @@
 // src/components/user/DoctorList.jsx
 import { message } from 'antd';
-import api from '../../utils/axiosConfig'; // Use centralized api
+import api from '/utils/axiosConfig'; // Use centralized api
 import React, { useState } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';

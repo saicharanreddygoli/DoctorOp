@@ -6,6 +6,7 @@ import Login from "./components/common/Login";
 import Register from "./components/common/Register";
 import UserHome from "./components/user/UserHome";
 import AdminHome from "./components/admin/AdminHome";
+import './App.css';
 // UserAppointments is rendered INSIDE UserHome now, so no direct route needed
 // import UserAppointments from "./components/user/UserAppointments";
 

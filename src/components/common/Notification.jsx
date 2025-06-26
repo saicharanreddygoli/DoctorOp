@@ -1,6 +1,6 @@
 // src/components/common/Notification.jsx
 import { Tabs, message } from 'antd';
-import api from '../../utils/axiosConfig'; // Use centralized api
+import api from '/utils/axiosConfig'; // Use centralized api
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
