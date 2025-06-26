@@ -4,9 +4,10 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* Removed color-scheme and background-color that were causing issues */
+  /* color-scheme: light dark; */
+  /* color: rgba(255, 255, 255, 0.87); */
+  /* background-color: #242424; */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,6 +16,7 @@
 }
 
 /* Basic link styles - might be overridden by App.css or component libraries */
+/* Kept these for general safety, but App.css/Bootstrap styles might take precedence */
 a {
   font-weight: 500;
   color: #646cff;
@@ -25,13 +27,19 @@ a:hover {
   color: #535bf2;
 }
 
-/* Body styles - likely overridden by App.css */
+/* Body styles - App.css should override this */
 body {
   margin: 0;
+  /* Removed display/place-items - let App component manage layout */
   /* display: flex; Removed this line */
   /* place-items: center; Removed this line */
   min-width: 320px;
+  /* Removed min-height here, managed by App.css */
   /* min-height: 100vh; Removed this line */
+
+  /* Set a default background/color for the very root */
+   background-color: #fff;
+   color: #213547;
 }
 
 h1 {
@@ -39,6 +47,7 @@ h1 {
   line-height: 1.1;
 }
 
+/* Default button styles - Bootstrap will likely override */
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -46,7 +55,9 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  /* background-color: #1a1a1a; */ /* Removed default dark background */
+   background-color: #f9f9f9; /* Use a light background as default */
+   color: #213547; /* Use a dark text color as default */
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -60,7 +71,8 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
+/* Removed light mode preference block - relying on App.css/Bootstrap */
+/* @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
@@ -71,4 +83,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */

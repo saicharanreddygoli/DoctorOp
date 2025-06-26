@@ -17,8 +17,9 @@ const Home = () => {
     <>
       <Navbar expand="lg" className="bg-body-tertiary">
         <Container fluid>
-          <Navbar.Brand>
-            <Link to={'/'}>MediCareBook</Link>
+          {/* Use Link inside Navbar.Brand */}
+          <Navbar.Brand as={Link} to="/">
+            MediCareBook
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
@@ -35,7 +36,7 @@ const Home = () => {
 
       <div className='home-container'>
         <div className="left-side">
-          <img alt="" src={p3} />
+          <img alt="Doctor and patient" src={p3} /> {/* Added alt text */}
         </div>
         <div className="right-side">
           <p>

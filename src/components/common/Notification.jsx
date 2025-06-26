@@ -5,26 +5,49 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Notification = () => {
-  const [user, setUser] = useState(); // State to hold user data including notifications
+  // Initialize user state from localStorage or null
+  const [user, setUser] = useState(() => {
+    const userData = localStorage.getItem('userData');
+    return userData ? JSON.parse(userData) : null;
+  });
+
   const navigate = useNavigate();
 
-  // Load user data from localStorage on mount
+  // Effect to sync localStorage to state on mount (and potentially future updates,
+  // though a reactive context is better for sync across components)
   useEffect(() => {
-    const userdata = JSON.parse(localStorage.getItem('userData'));
-    if (userdata) {
-      setUser(userdata);
-    }
-  }, []); // Empty dependency array ensures this runs only once on mount
+    const handleStorageChange = () => {
+       const userData = localStorage.getItem('userData');
+       setUser(userData ? JSON.parse(userData) : null);
+    };
 
-  // Update localStorage whenever the user state changes (specifically notifications)
-  useEffect(() => {
-     if (user) {
+    // Basic check on mount
+    handleStorageChange();
+
+    // Optional: listen for storage events (less common now, more for different tabs/windows)
+    // window.addEventListener('storage', handleStorageChange);
+
+    // Cleanup listener (if added)
+    // return () => {
+    //   window.removeEventListener('storage', handleStorageChange);
+    // };
+  }, []); // Empty dependency array ensures this runs only once on mount/unmount
+
+  // Effect to update localStorage when user state changes (e.g., notifications read/deleted)
+   useEffect(() => {
+      if (user !== null) { // Only update if user is not null
          localStorage.setItem('userData', JSON.stringify(user));
-     }
-  }, [user]); // Dependency array includes user
+      } else {
+        // If user becomes null, clear local storage (e.g., on logout, handled elsewhere)
+        // localStorage.removeItem('userData');
+      }
+   }, [user]); // Dependency array includes user
 
   const handleAllMarkRead = async () => {
-    if (!user) return; // Prevent action if user data isn't loaded
+    if (!user || !user._id) {
+        message.error("User data not available.");
+        return;
+    }
 
     try {
       // Use centralized api instance
@@ -34,22 +57,25 @@ const Notification = () => {
         // Update local state and localStorage AFTER successful API response
         const updatedUser = {
           ...user,
+          seennotification: [...user.seennotification, ...user.notification], // Move all from unread to seen
           notification: [], // Clear unread notifications
-          seennotification: [...user.seennotification, ...user.notification] // Move to seen
         };
         setUser(updatedUser); // This will trigger the second useEffect to update localStorage
         message.success(res.data.message);
       } else {
-        message.error(res.data.message);
+        message.error(res.data.message); // Show backend message
       }
     } catch (error) {
-      console.error('Error marking notifications as read:', error);
+      console.error('Error marking notifications as read:', error); // Use console.error
       message.error("Something went wrong while marking notifications.");
     }
   };
 
   const handledeleteAllMark = async () => {
-     if (!user) return; // Prevent action if user data isn't loaded
+     if (!user || !user._id) {
+        message.error("User data not available.");
+        return;
+    }
 
     try {
       // Use centralized api instance
@@ -61,10 +87,10 @@ const Notification = () => {
         setUser(updatedUser); // This will trigger the second useEffect to update localStorage
         message.success(res.data.message);
       } else {
-        message.error(res.data.message);
+        message.error(res.data.message); // Show backend message
       }
     } catch (error) {
-      console.error('Error deleting notifications:', error);
+      console.error('Error deleting notifications:', error); // Use console.error
       message.error("Something went wrong while deleting notifications.");
     }
   };
@@ -72,8 +98,9 @@ const Notification = () => {
   return (
     <div>
       <h2 className='p-3 text-center'>Notification</h2>
-      <Tabs defaultActiveKey="0"> {/* Added defaultActiveKey */}
-        <Tabs.TabPane tab={`Unread (${user?.notification?.length || 0})`} key={0}> {/* Show count */}
+      {/* Added key to Tabs */}
+      <Tabs defaultActiveKey="0" key="notificationTabs"> {/* Added defaultActiveKey and key */}
+        <Tabs.TabPane tab={`Unread (${user?.notification?.length || 0})`} key="0"> {/* Show count, changed key to string "0" */}
           <div className="d-flex justify-content-end">
             <h4
               style={{ cursor: 'pointer', color: '#007bff' }} // Added color for link-like appearance
@@ -86,10 +113,10 @@ const Notification = () => {
           {/* Use optional chaining and map over the notification array */}
           {user?.notification && user.notification.length > 0 ? (
             user.notification.map((notificationMsg, index) => (
-              // Fixed onClick to use navigate
+              // Fixed onClick to use navigate, used notificationMsg._id if available, else index
               <div
-                key={index} // Use index as fallback key if _id is not available/unique
-                onClick={() => navigate(notificationMsg.onClickPath)}
+                key={notificationMsg._id || index} // Use _id if available, fallback to index
+                onClick={() => notificationMsg.onClickPath && navigate(notificationMsg.onClickPath)} // Navigate only if onClickPath exists
                 className="card mb-2" // Added margin bottom
                 style={{ cursor: 'pointer' }} // Add cursor style
               >
@@ -102,7 +129,7 @@ const Notification = () => {
              <div className="p-3 text-center text-muted">No unread notifications.</div>
           )}
         </Tabs.TabPane>
-        <Tabs.TabPane tab={`Read (${user?.seennotification?.length || 0})`} key={1}> {/* Show count */}
+        <Tabs.TabPane tab={`Read (${user?.seennotification?.length || 0})`} key="1"> {/* Show count, changed key to string "1" */}
           <div className="d-flex justify-content-end">
             <h4
               style={{ cursor: 'pointer', color: '#dc3545' }} // Added color for delete action
@@ -115,9 +142,10 @@ const Notification = () => {
           {/* Use optional chaining and map over the seennotification array */}
           {user?.seennotification && user.seennotification.length > 0 ? (
             user.seennotification.map((notificationMsg, index) => (
+              // Used notificationMsg._id if available, else index
               <div
-                key={index} // Use index as fallback key
-                onClick={() => navigate(notificationMsg.onClickPath)}
+                key={notificationMsg._id || index} // Use _id if available, fallback to index
+                 onClick={() => notificationMsg.onClickPath && navigate(notificationMsg.onClickPath)} // Navigate only if onClickPath exists
                 className="card mb-2" // Added margin bottom
                 style={{ cursor: 'pointer' }} // Add cursor style
               >

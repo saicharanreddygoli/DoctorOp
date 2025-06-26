@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import Alert from 'react-bootstrap/Alert';
 import { Container } from 'react-bootstrap';
-import axios from 'axios';
+import api from '/utils/axiosConfig'; // Use centralized api
 import { message } from 'antd';
 
 const AdminDoctors = () => {
@@ -12,63 +12,58 @@ const AdminDoctors = () => {
 
    const getDoctors = async () => {
       try {
-         const res = await axios.get('http://localhost:5000/api/admin/getalldoctors', {
-            headers: {
-               Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-         })
+         // Use centralized api instance
+         const res = await api.get('/admin/getalldoctors');
          if (res.data.success) {
             setDoctors(res.data.data)
+         } else {
+             message.error(res.data.message); // Show backend message on failure
          }
       } catch (error) {
-         console.log(error)
-         message.error('something went wrong')
+         console.error('Error fetching doctors:', error); // Use console.error
+         message.error('Something went wrong fetching doctors');
       }
    }
 
+   // Fetch doctors on component mount
+   useEffect(() => {
+      getDoctors();
+   }, []) // Empty dependency array: runs only once on mount
+
+
    const handleApprove = async (doctorId, status, userid) => {
-      console.log(doctorId, status, userid)
       try {
-         const res = await axios.post('http://localhost:5000/api/admin/getapprove', { doctorId, status, userid }, {
-            headers: {
-               Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-         })
+         // Use centralized api instance
+         const res = await api.post('/admin/getapprove', { doctorId, status, userid });
 
          if (res.data.success) {
-            message.success(res.data.message)
+            message.success(res.data.message);
+            getDoctors(); // Re-fetch doctors to update the table
+         } else {
+             message.error(res.data.message); // Show backend message on failure
          }
-         console.log(res)
       } catch (error) {
-         console.log(error)
-         message.error('something went wrong')
+         console.error('Error approving doctor:', error); // Use console.error
+         message.error('something went wrong approving doctor');
       }
    }
 
    const handleReject = async (doctorId, status, userid) => {
-      console.log(doctorId, status, userid)
       try {
-         const res = await axios.post('http://localhost:5000/api/admin/getreject', { doctorId, status, userid }, {
-            headers: {
-               Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-         })
+         // Use centralized api instance
+         const res = await api.post('/admin/getreject', { doctorId, status, userid });
 
          if (res.data.success) {
-            message.success(res.data.message)
+            message.success(res.data.message);
+            getDoctors(); // Re-fetch doctors to update the table
+         } else {
+             message.error(res.data.message); // Show backend message on failure
          }
-         console.log(res)
       } catch (error) {
-         console.log(error)
-         message.error('something went wrong')
+         console.error('Error rejecting doctor:', error); // Use console.error
+         message.error('something went wrong rejecting doctor');
       }
    }
-
-
-   useEffect(() => {
-      getDoctors()
-
-   }, [])
 
 
    return (
@@ -95,21 +90,29 @@ const AdminDoctors = () => {
                               <td>{user.fullName}</td>
                               <td>{user.email}</td>
                               <td>{user.phone}</td>
-                              <td>{user.status === 'pending' ?
-                                 <Button onClick={() => handleApprove(user._id, 'approved', user.userId)} className='mx-2' size='sm' variant="outline-success">
-                                    Approve
-                                 </Button>
-                                 :
-                                 <Button onClick={() => handleReject(user._id, 'rejected', user.userId)} className='mx-2' size='sm' variant="outline-danger">
-                                    Reject
-                                 </Button>}</td>
+                              <td>
+                                 {/* Show Approve/Reject buttons only if status is pending */}
+                                 {user.status === 'pending' ? (
+                                    <>
+                                       <Button onClick={() => handleApprove(user._id, 'approved', user.userId)} className='mx-2' size='sm' variant="outline-success">
+                                          Approve
+                                       </Button>
+                                       <Button onClick={() => handleReject(user._id, 'rejected', user.userId)} className='mx-2' size='sm' variant="outline-danger">
+                                          Reject
+                                       </Button>
+                                    </>
+                                 ) : (
+                                    // Otherwise, show the current status
+                                    <span>{user.status}</span>
+                                 )}
+                              </td>
                            </tr>
                         )
                      })
                   ) : (
                      <tr>
                         <td colSpan={5}>
-                           <Alert variant="info">
+                           <Alert variant="info" className="text-center"> {/* Center the alert */}
                               <Alert.Heading>No Doctors to show</Alert.Heading>
                            </Alert>
                         </td>

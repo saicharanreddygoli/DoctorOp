@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
+// Import global CSS files here
 import './index.css';
+import './App.css'; // Import App.css here
 // Import Bootstrap CSS here
 import 'bootstrap/dist/css/bootstrap.min.css';
 // Import Ant Design CSS (often needed for base styles)
-// Check Ant Design docs, typically you import a theme or the base styles
-// For now, let's assume this is needed for messages/modals if not coming via component
-// import 'antd/dist/reset.css'; // Or similar depending on Antd version
+import 'antd/dist/reset.css'; // Recommended Antd v5 reset CSS
 
 import { BrowserRouter } from 'react-router-dom';
 

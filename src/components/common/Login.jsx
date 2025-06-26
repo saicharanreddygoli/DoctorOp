@@ -1,35 +1,18 @@
 // src/components/common/Login.jsx
-import React, { useState, useEffect } from 'react'; // Added useEffect
+import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { message } from 'antd';
-import { Button, Form, Row, Col, Card } from 'react-bootstrap'; // Import Card, Row, Col
+import { Button, Form, Row, Col, Card } from 'react-bootstrap';
 import photo1 from '../../images/photo1.png';
 import api from '/utils/axiosConfig'; // Use centralized api
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom'; // Removed useNavigate as we use window.location.reload
 
 const Login = () => {
-  const navigate = useNavigate();
-
-  // Redirect if already logged in
-  useEffect(() => {
-    const user = localStorage.getItem('userData');
-    if (user) {
-      try {
-        const userData = JSON.parse(user);
-        if (userData.type === 'admin') {
-          navigate('/adminhome');
-        } else {
-          navigate('/userhome');
-        }
-      } catch (e) {
-        console.error('Failed to parse user data from localStorage', e);
-        // If localStorage is corrupt, maybe clear it or ignore and let them log in
-      }
-    }
-  }, [navigate]); // Add navigate to dependency array
-
+  // *** Removed useEffect redirect logic here ***
+  // App.jsx now handles initial routing based on localStorage on page load.
+  // We will use window.location.reload() to force App.jsx to re-evaluate after login.
 
   const [user, setUser] = useState({
     email: '',
@@ -49,25 +32,16 @@ const Login = () => {
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('userData', JSON.stringify(res.data.userData));
         message.success('Login successfully');
-        const loggedInUser = res.data.userData; // Use data from response directly
 
-        switch (loggedInUser.type) {
-          case "admin":
-            navigate("/adminhome");
-            break;
-          case "user":
-            navigate("/userhome");
-            break;
-          default:
-            // Handle unexpected user type, maybe redirect to login or home
-             navigate("/login");
-            break;
-        }
+        // *** Use full page reload to force App.jsx re-evaluation of localStorage ***
+        window.location.reload(); // This is a simpler fix than implementing Context API now
+
       } else {
+        // Show backend message on failure
         message.error(res.data.message);
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Login error:', error); // Use console.error
       message.error('Login failed. Please check your credentials.'); // More specific error
     }
   };
@@ -76,8 +50,9 @@ const Login = () => {
     <>
       <Navbar expand="lg" className="bg-body-tertiary">
         <Container fluid>
-          <Navbar.Brand>
-            <Link to={'/'}>MediCareBook</Link>
+           {/* Use Link inside Navbar.Brand */}
+          <Navbar.Brand as={Link} to="/">
+            MediCareBook
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
