@@ -2,6 +2,9 @@
 
 /* Import Bootstrap CSS */
 @import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+/* Import Ant Design CSS */
+@import "../node_modules/antd/dist/reset.css";
+
 
 /* Basic reset */
 * {
@@ -12,33 +15,17 @@
 
 body {
   background-color: rgb(190, 203, 203);
-  /* Added min-height to ensure body takes at least full viewport height */
   min-height: 100vh;
 }
 
-/* Removed global 'a' styles to let component libraries handle them */
-/* a {
-  color: black;
-  text-decoration: none;
-  margin-right: 20px;
-} */
-
-/* Add specific link style if needed, e.g., for the sidebar links */
-.sidebar a {
-   /* Make sure sidebar links inherit color from parent div */
-   /* color: white; */ /* Or your desired sidebar link color */
-   text-decoration: none;
-   /* margin-right: 20px; Removed unless needed */
-}
-
-/* Ensure Nav.Link in header works */
-/* Targeted Navbar specific links */
+/* Adjusted Navbar Link Style */
 .bg-body-tertiary .navbar-nav .nav-link {
-   color: black; /* Or match your header link color */
+   color: black;
    margin-right: 20px;
+   transition: color 0.2s ease; /* Added transition */
 }
 .bg-body-tertiary .navbar-nav .nav-link:hover {
-    color: #007bff; /* Hover color */
+    color: #007bff;
 }
 
 
@@ -48,52 +35,46 @@ body {
   min-height: 100vh;
 }
 
-/* The 'content' class is used in the layout, be careful modifying this globally */
-/* The content in App.jsx wraps the routes, which is different from the layout content */
-/* Let's rename the route wrapper content to avoid conflict */
 .route-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  /* Adjusted height calculation to fill space excluding header and footer */
   min-height: calc(100vh - 50px); /* Assuming footer is approx 50px */
 }
 
 .home-container {
   max-width: 100vw;
-  /* Adjusted height calculation to fill space excluding header and footer */
-  min-height: calc(100vh - 50px); /* Assuming footer is approx 50px */
+  min-height: calc(100vh - 50px);
   display: flex;
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
-  align-items: center; /* Vertically center items */
-  justify-content: center; /* Center horizontally */
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
 .left-side,
 .right-side {
   flex: 1;
-  min-width: 300px; /* Minimum width for responsiveness */
+  min-width: 300px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px; /* Added padding */
+  padding: 20px;
 }
 
 .left-side img {
   max-width: 100%;
   height: auto;
-  max-height: 70vh; /* Max height */
+  max-height: 70vh;
 }
 
 .right-side {
-  text-align: center; /* Center text */
+  text-align: center;
 }
 
 .right-side p {
-   margin: 0; /* Reset paragraph margin */
+   margin: 0;
 }
-
 
 span {
   font-family: Arial, Helvetica, sans-serif;
@@ -111,158 +92,140 @@ span {
   font-size: 1.5em;
 }
 
-/* Added style for About Us section to differentiate */
 .about-us-text {
    margin-top: 40px;
    padding: 20px;
-   background-color: #f8f9fa; /* Light background */
+   background-color: #f8f9fa;
    border-radius: 5px;
    box-shadow: 0 0 5px rgba(0,0,0,0.1);
-   margin-left: auto; /* Center using auto margins */
+   margin-left: auto;
    margin-right: auto;
-   max-width: 960px; /* Optional: Limit width for readability */
+   max-width: 960px;
 }
 
 .about-us-text p {
-   text-align: justify; /* Justify text */
-   color: #212529; /* Dark text color */
+   text-align: justify;
+   color: #212529;
 }
 
 /******************** Layout Styles (Admin/User Home) ********************/
 .main {
   padding: 10px;
-   /* Adjusted height calculation */
-  min-height: calc(100vh - 70px); /* Assuming footer is approx 50px + 10px top/bottom padding */
-  /* background-color: aqua; */ /* Removed background */
+  min-height: calc(100vh - 70px);
 }
 
 .layout {
   display: flex;
-   /* Adjusted height calculation */
-  min-height: calc(100vh - 90px); /* main min-height - main padding */
-  border-radius: 5px; /* Added border-radius */
-  overflow: hidden; /* Hide overflow if children exceed bounds */
+  min-height: calc(100vh - 90px);
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Added subtle shadow to layout */
 }
 
 .sidebar {
   min-height: 100%;
-  height: auto; /* Changed to auto to fit content */
-  width: 200px; /* Fixed width for sidebar */
-  /* Removed border-radius from here, added to .layout */
+  width: 200px;
   background-color: rgb(153, 145, 145);
-  box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* Adjusted shadow direction */
-  margin-right: 0; /* Removed margin, handled by layout */
   color: white;
-  padding-top: 20px; /* Added padding */
-  display: flex; /* Added flex */
-  flex-direction: column; /* Stack children vertically */
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .content {
-  flex-grow: 1; /* Allow content to take remaining space */
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  background-color: whitesmoke; /* Added background color */
-  /* Removed border-radius from here, added to .layout */
+  background-color: whitesmoke;
 }
 
 .header {
-  height: 60px; /* Reduced header height */
-  margin-bottom: 10px; /* Reduced margin */
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Adjusted shadow direction */
-  background-color: white; /* Changed to white */
+  height: 60px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background-color: white;
   border-radius: 5px;
-  padding: 0 15px; /* Added padding */
-  display: flex; /* Use flex for header content */
-  align-items: center; /* Vertically align items */
-  justify-content: space-between; /* Space out items */
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .body {
-  flex-grow: 1; /* Allow body to take remaining space */
-  margin-bottom: 0; /* Removed margin */
-  /* Removed box-shadow, background-color, border-radius from here */
-  overflow-y: auto; /* Add scroll for long content */
-  padding: 15px; /* Added padding to the body content area */
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 15px;
 }
 
 .logo {
-    padding-bottom: 20px; /* Added padding below logo */
-    margin-bottom: 20px; /* Added margin below logo */
-    border-bottom: 1px solid rgba(255,255,255,0.2); /* Add a separator line */
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
 .logo h2 {
   text-align: center;
-  margin: 0; /* Adjusted margin */
-  font-size: 1.5rem; /* Adjusted font size */
+  margin: 0;
+  font-size: 1.5rem;
 }
 
 .menu {
-  flex-grow: 1; /* Allow menu to take vertical space */
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  padding: 0 15px; /* Added padding */
+  padding: 0 15px;
 }
 
 .menu-items {
-  margin-bottom: 10px; /* Adjusted margin */
-  padding: 10px; /* Added padding */
+  margin-bottom: 10px;
+  padding: 10px;
   border-radius: 4px;
-  transition: background-color 0.2s ease; /* Smooth transition */
-  color: white; /* Default text color */
-  display: flex; /* Use flex to align icon and text */
-  align-items: center; /* Vertically center icon and text */
+  transition: background-color 0.2s ease;
+  color: white;
+  display: flex;
+  align-items: center;
+  cursor: pointer; /* Added cursor style */
 }
 
 .menu-items:hover {
-   background-color: rgba(255, 255, 255, 0.1); /* Hover effect */
+   background-color: rgba(255, 255, 255, 0.1);
 }
 
 .menu-items.active {
-   background-color: rgba(0, 0, 0, 0.3); /* Active state background */
+   background-color: rgba(0, 0, 0, 0.3);
 }
 
-
 .menu-items span {
-   /* color: white; */ /* Text color inherited from parent */
    text-decoration: none;
-   font-size: 1.1rem; /* Adjusted font size */
-   cursor: pointer;
-   margin-left: 10px; /* Space between icon and text */
+   font-size: 1.1rem;
+   margin-left: 10px;
 }
 
 .menu-items .icon {
   font-size: 1.2rem;
-  /* margin: 0 15px; Adjusted */
-  vertical-align: middle; /* Align icon vertically */
+  vertical-align: middle;
 }
 
 .header-content {
   display: flex;
   align-items: center;
-  /* Removed fixed height */
-  /* justify-content: flex-start; Removed */
-  /* margin: auto 15px; Removed */
 }
 
 .header-content h3 {
-    margin: 0; /* Reset margin for h3 */
+    margin: 0;
+    margin-left: 15px; /* Added margin left to separate from notification */
 }
 
-/* Style for the notification icon and badge */
 .notify {
   position: relative;
-  display: inline-flex; /* Use inline-flex to align items */
+  display: inline-flex;
   align-items: center;
-  margin-right: 20px; /* Space after notification icon */
   cursor: pointer;
-  color: #007bff; /* Example color for icon */
+  color: #007bff;
 }
 
 .notify .icon {
   font-size: 1.5rem;
-  /* color: #007bff; */ /* Example color, moved to parent */
 }
 
 /* Style for notification cards in the Notification component */
@@ -271,7 +234,7 @@ span {
   border: 1px solid #ddd;
   border-radius: 5px;
   background-color: #fff;
-  color: #333; /* Text color */
+  color: #333;
 }
 
 .card-text {
@@ -280,7 +243,6 @@ span {
 
 
 /******************** General Component Styles ********************/
-/* These styles seem generic and might apply to other components */
 .box {
   display: flex;
   flex-direction: column;
@@ -292,7 +254,7 @@ span {
   background-color: whitesmoke;
   max-width: 700px;
   width: 100%;
-  margin: 20px auto; /* Center the box */
+  margin: 20px auto;
 }
 
 .component {
@@ -305,7 +267,7 @@ span {
   border: 2px dashed grey;
   border-radius: 10px;
   width: 100%;
-  min-height: 200px; /* Changed height to min-height */
+  min-height: 200px;
   text-align: center;
   cursor: pointer;
 }
@@ -327,13 +289,11 @@ span {
   color: grey;
   padding: 10px 20px;
   margin-right: 10px;
-  /* Removed background-color and border-color for default button look */
 }
 
 .btn-progress button:last-child {
-   margin-right: 0; /* Remove margin on last button */
+   margin-right: 0;
 }
-
 
 .btn-progress button:hover {
   box-shadow: 0 0 10px grey;
@@ -345,7 +305,7 @@ progress {
   appearance: none;
   background-color: #f0f0f0;
   border-radius: 10px;
-  border: none; /* Added border: none */
+  border: none;
 }
 
 progress::-webkit-progress-bar {
@@ -358,6 +318,39 @@ progress::-webkit-progress-value {
   border-radius: 10px;
 }
 
+/* --- New Styles for Doctor Card Details Layout --- */
+.doctor-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Creates two equal columns */
+    gap: 10px; /* Adds space between grid items */
+    margin-top: 15px; /* Space below the subtitle */
+    margin-bottom: 15px; /* Space above the button */
+    font-size: 0.95em; /* Slightly smaller text for details */
+}
+
+.doctor-details-grid .detail-item {
+    /* Basic styling for each detail block */
+    line-height: 1.3; /* Improve readability */
+}
+
+.doctor-details-grid .detail-item small {
+    display: block; /* Ensure the label text is on its own line */
+    font-size: 0.8em; /* Make the labels smaller */
+    color: #555; /* Make labels slightly darker than muted text */
+    margin-bottom: 2px; /* Small space between label and value */
+}
+
+.doctor-details-grid .detail-item b {
+     font-weight: 600; /* Make the value bold */
+}
+
+
+.doctor-details-grid .detail-item.full-width {
+    grid-column: span 2; /* This makes the address item span across both columns */
+}
+/* --- End New Styles --- */
+
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .layout {
@@ -367,46 +360,47 @@ progress::-webkit-progress-value {
   .sidebar {
     width: 100%;
     height: auto;
-    margin-right: 0;
-    /* margin-bottom: 10px; */ /* Removed margin */
     padding-top: 10px;
     padding-bottom: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Adjusted shadow */
-     border-radius: 5px; /* Add border-radius */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+     border-radius: 5px;
   }
 
    .sidebar .logo {
       padding-bottom: 10px;
       margin-bottom: 10px;
-      border-bottom: none; /* Remove separator on mobile */
+      border-bottom: none;
    }
 
   .sidebar .menu {
-      flex-direction: row; /* Row layout for menu items */
-      justify-content: space-around; /* Space them out */
-      padding: 0 10px; /* Adjusted padding */
-      flex-wrap: wrap; /* Allow menu items to wrap */
+      flex-direction: row;
+      justify-content: space-around;
+      padding: 0 10px;
+      flex-wrap: wrap;
   }
 
   .sidebar .menu-items {
      margin-bottom: 0;
-     padding: 8px 5px; /* Adjusted padding */
-     flex-basis: 0; /* Allow flex item to shrink */
-     flex-grow: 1; /* Allow flex item to grow */
-     justify-content: center; /* Center icon/text */
+     padding: 8px 5px;
+     flex-basis: 0;
+     flex-grow: 1;
+     justify-content: center;
   }
 
   .sidebar .menu-items span {
-      display: none; /* Hide text on small screens */
+      display: none;
   }
    .sidebar .menu-items .icon {
-      margin: 0; /* Remove margin */
-      font-size: 1.5rem; /* Increase icon size on mobile */
+      margin: 0;
+      font-size: 1.5rem;
    }
 
   .header {
     margin-bottom: 10px;
   }
+ .header-content h3 {
+    margin-left: 10px; /* Adjust margin on mobile */
+ }
 
   .home-container {
     flex-direction: column;

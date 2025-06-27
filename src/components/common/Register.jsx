@@ -1,5 +1,5 @@
 // src/components/common/Register.jsx
-import React, { useState } from 'react'; // Removed useEffect
+import React, { useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -13,54 +13,53 @@ import api from '/utils/axiosConfig';
 const Register = () => {
   const navigate = useNavigate();
 
-  // Initialize state with default type 'user'
   const [user, setUser] = useState({
     fullName: '',
     email: '',
     password: '',
     phone: '',
-    type: 'user' // Default to 'user'
+    type: 'user' // Initialize type to 'user'
   });
 
   const handleChange = (e) => {
-      // For radio buttons, specifically handle the 'type' field
-      if (e.target.name === 'type') {
-           setUser({ ...user, type: e.target.value });
-      } else {
-           setUser({ ...user, [e.target.name]: e.target.value });
-      }
+    // Handle radio button changes specifically for 'type'
+    if (e.target.name === 'type') {
+        setUser({ ...user, type: e.target.value });
+    } else {
+        setUser({ ...user, [e.target.name]: e.target.value });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
-    // Note: type is already defaulted to 'user' in state, but still good to check
+    // Basic frontend validation
     if (!user.fullName || !user.email || !user.password || !user.phone || !user.type) {
         message.error('Please fill in all fields.');
         return;
     }
 
-    // Double-check on the frontend that the type is not admin if that's not allowed
-    if (user.type === 'admin') {
-         message.error('Admin registration is not allowed via this form.');
-         return; // Prevent sending the request
-    }
-
-
     try {
-      // Use centralized api instance
-      // Send the user object which now defaults type to 'user' and cannot be changed via the form
+      // Send the user object including the selected type to the backend
       const res = await api.post('/user/register', user);
+
       if (res.data.success) {
-        message.success('Registered Successfully. Please login.');
+        message.success(res.data.message);
+        // Redirect to login after successful registration (admin or user)
         navigate('/login');
       } else {
+        // Show backend error message (e.g., "User already exists" or "An administrator account already exists")
         message.error(res.data.message);
       }
     } catch (error) {
       console.error('Registration error:', error);
+      // More generic error if backend doesn't send a specific message or there's a network issue
       message.error('Something went wrong during registration.');
+
+       // If backend sent a specific error message in the response body, try to show it
+       if (error.response && error.response.data && error.response.data.message) {
+           message.error(`Error: ${error.response.data.message}`);
+       }
     }
   };
 
@@ -118,16 +117,28 @@ const Register = () => {
 
                     <Container className='my-3'>
                        <Form.Label className='me-3'>Register as:</Form.Label>
-                       {/* Removed the Admin radio button */}
+                       {/* Admin Radio Button - Added back */}
+                       <Form.Check
+                          inline
+                          label='Admin'
+                          name='type'
+                          type='radio'
+                          id='inlineRadioAdmin'
+                          value='admin' // Value is 'admin'
+                          checked={user.type === 'admin'} // Check if state type is 'admin'
+                          onChange={handleChange} // Handle change
+                          required
+                       />
+                       {/* User Radio Button */}
                        <Form.Check
                           inline
                           label='User'
-                          name='type' // Keep name 'type'
+                          name='type'
                           type='radio'
                           id='inlineRadioUser'
-                          value='user' // Keep value 'user'
-                          checked={user.type === 'user'} // Will always be true now
-                          onChange={handleChange} // Still call handleChange
+                          value='user' // Value is 'user'
+                          checked={user.type === 'user'} // Check if state type is 'user'
+                          onChange={handleChange} // Handle change
                           required
                        />
                     </Container>
