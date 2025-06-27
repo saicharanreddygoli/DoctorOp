@@ -12,38 +12,7 @@ This is the frontend application for the MediCareBook Doctor Appointment Booking
 *   **Ant Design:** A component library used for specific UI elements like Tabs, Badge, TimePicker, and message popups.
 *   **@mui/icons-material:** Provides Material Design icons.
 *   **dayjs:** A lightweight date/time library, used here primarily with Ant Design's date/time pickers.
-
-## Project Structure
-Use code with caution.
-frontend/
-├── public/ # Static assets (index.html, favicon, images)
-├── src/
-│ ├── components/ # Reusable React components
-│ │ ├── admin/ # Components specific to the Admin Dashboard
-│ │ │ ├── AdminAppointments.jsx # View all appointments (Admin)
-│ │ │ ├── AdminDoctors.jsx # View/manage doctor applications (Admin)
-│ │ │ ├── AdminHome.jsx # Admin Dashboard layout and navigation
-│ │ │ ├── AdminRegister.jsx # Form to create new admin accounts (Admin only)
-│ │ │ └── AdminUsers.jsx # View all user accounts (Admin)
-│ │ ├── common/ # Components shared across roles or for public access
-│ │ │ ├── Home.jsx # Landing page
-│ │ │ ├── Login.jsx # Login form
-│ │ │ ├── Notification.jsx # Display user/admin notifications
-│ │ │ └── Register.jsx # Public registration form (User/First Admin)
-│ │ └── user/ # Components specific to the Standard User/Doctor view
-│ │ ├── AddDocs.jsx # (Appears unused/empty in provided code)
-│ │ ├── ApplyDoctor.jsx # Form to apply as a doctor (User)
-│ │ ├── DoctorList.jsx # Card component for displaying a single doctor (User)
-│ │ ├── UserAppointments.jsx # View user's or doctor's appointments
-│ │ └── UserHome.jsx # User/Doctor Dashboard layout and navigation
-│ ├── App.css # Custom CSS styles
-│ ├── App.jsx # Main application component, sets up React Router
-│ ├── index.css # Global default styles
-│ └── main.jsx # Entry point, mounts the React app (includes global CSS imports)
-├── .env # Environment variables (backend API URL)
-├── index.html # Main HTML file
-└── package.json # Project dependencies and scripts
-Generated code
+*   
 ## Setup
 
 1.  **Clone the repository:** If not already done, clone the entire project.
